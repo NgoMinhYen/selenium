@@ -1,7 +1,10 @@
 package pages;
 
 import core.DriverUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
+import test.Profile;
 
 public class ProfilePage extends BasePage{
     By txtUserName = By.xpath("//input[@name='name']");
@@ -12,6 +15,8 @@ public class ProfilePage extends BasePage{
     By txtResultPage2 = By.xpath("//div[@id='form-container']//following-sibling::pre");
     By btnNextSection2 = By.xpath("//a[@class='btn btn-block btn-info']");
     By btnSubmit = By.xpath("//button[@type='submit']");
+
+    private static final Logger log = LogManager.getLogger(ProfilePage.class.getName());
 
     public void addProfile(String userName, String email) {
         DriverUtil.waitVisibilityOfElementLocated(txtUserName, normalTime);
@@ -30,6 +35,7 @@ public class ProfilePage extends BasePage{
     public void choiceRadioButton(String value) {
         DriverUtil.waitForElementNotChange(rdConsole, normalTime);
         DriverUtil.clickRadio(rdConsole, "value", value);
+        log.info("chọn giá trị:"+ value);
     }
 
     public String getTextResult2() {

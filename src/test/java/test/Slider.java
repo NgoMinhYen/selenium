@@ -14,7 +14,7 @@ public class Slider {
     public void setBaseUrl() {
         DriverUtil.initDriver(ahihi.CHROME);
         DriverUtil.maximizeWindow();
-        DriverUtil.navigateTo("https://demoqa.com/slider");
+        DriverUtil.navigateTo("https://demoqa.com");
     }
 
     @Test

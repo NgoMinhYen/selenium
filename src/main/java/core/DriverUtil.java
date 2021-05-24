@@ -15,6 +15,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 public class DriverUtil {
@@ -69,19 +70,23 @@ public class DriverUtil {
     }
 
     public static void maximizeWindow() {
-        webDriver.manage().window().maximize();
+        getWebDriver().manage().window().maximize();
     }
 
     public static void navigateTo(String link) {
-        webDriver.navigate().to(link);
+        getWebDriver().navigate().to(link);
+    }
+
+    public static void implicitlyWait(int waitConditionLocator) {
+        getWebDriver().manage().timeouts().implicitlyWait(waitConditionLocator, TimeUnit.SECONDS);
     }
 
     public static WebElement findElement(By by) {
-        return webDriver.findElement(by);
+        return getWebDriver().findElement(by);
     }
 
     public static List<WebElement> findElements(By by) {
-        return webDriver.findElements(by);
+        return getWebDriver().findElements(by);
     }
 
     public static void close() {
@@ -103,7 +108,6 @@ public class DriverUtil {
 
     public static void click(By by) {
         findElement(by).click();
-
     }
 
     public static void clickRadio(By by, String attribute, String value) {
@@ -146,6 +150,10 @@ public class DriverUtil {
                 return oldP.equals(newP);
             }
         });
+    }
+    public static void waitForElemetClickAble(WebElement element, int waitConditionLocator){
+        webDriverWait = new WebDriverWait(webDriver,waitConditionLocator);
+        webDriverWait.until(ExpectedConditions.elementToBeClickable(element));
     }
 
     public static void iii() {

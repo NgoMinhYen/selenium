@@ -1,13 +1,19 @@
 package pages;
 
 import core.DriverUtil;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GlobeDrProfilePage extends BasePage {
     By signinMenu = By.xpath("//a[@translate='signIn']");
@@ -22,6 +28,7 @@ public class GlobeDrProfilePage extends BasePage {
     By txtDateOfBirth = By.xpath("//input[@placeholder='Dd/mm/yyyy']");
     By btnSate = By.xpath("//div[@class='col-lg-6 col-12 pl0'][6]");
     By btnSelectSate = By.xpath("//div[@class='col-lg-6 col-12 pl0'][6]//select/option");
+    By txtImage = By.xpath("//div[@class='por bg-image-model bd-radius-50p hover-container mb15 ofh']");
 
     public void selectCountryInLoginPage(String country) {
         DriverUtil.waitVisibilityOfElementLocated(By.xpath(String.format(templateOption, "country")), normalTime);
@@ -33,10 +40,10 @@ public class GlobeDrProfilePage extends BasePage {
         }
     }
 
-    public void updateYourName() {
+    public void updateYourName(String name) {
         DriverUtil.waitVisibilityOfElementLocated(By.xpath("//div[@class='form-control mb15'][contains(.,'84347249676')]"), normalTime);
         DriverUtil.clear(By.xpath(String.format(templateInput, "yourName")));
-        DriverUtil.sendKey(By.xpath(String.format(templateInput, "yourName")), DriverUtil.randomString(8));
+        DriverUtil.sendKey(By.xpath(String.format(templateInput, "yourName")),name);
 
     }
 
@@ -140,6 +147,31 @@ public class GlobeDrProfilePage extends BasePage {
         }
         DriverUtil.waitVisibilityOfElementLocated(By.xpath("//div[@class='center-block']/button[2]"), normalTime);
         DriverUtil.click(By.xpath("//div[@class='center-block']/button[2]"));
+
+    }
+
+    public void getUrlImage() {
+        WebElement img = DriverUtil.findElement(txtImage);
+        String url = img.getAttribute("style");
+        System.out.println("HHHH:" + url);
+        String regex = ".+?(\"(.*?)\")";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(url);
+        if (matcher.find()) {
+            File f = new File("D:\\image001.jpg");
+            URL myUrl = null;
+            try {
+                myUrl = new URL(matcher.group(1).substring(1, matcher.group(1).length() - 1));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            try {
+                FileUtils.copyURLToFile(myUrl, f);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public void updateAddress(String address) {
@@ -167,10 +199,10 @@ public class GlobeDrProfilePage extends BasePage {
         DriverUtil.click(btnAccount);
     }
 
-    public void updateProfile(String phoneNumber, String passWord, String country, String date, String address) {
+    public void updateProfile(String phoneNumber, String passWord, String country, String date, String address,String name) {
         loginWithPhoneNumberAndPassword(phoneNumber, passWord, country);
         choiceAccountFromDashboard();
-        updateYourName();
+        updateYourName(name);
         updateTitle();
         updateEmail();
         updateDateOfBirth(date);
